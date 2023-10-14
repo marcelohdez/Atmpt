@@ -1,0 +1,11 @@
+[package]
+name = "atmpt"
+authors = ["Marcelo Hernandez <marcelohdez.inq@gmail.com>"]
+description = "Attempt quick, temporary code projects"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.75"
+directories-next = "2.0.0"
+clap = { version = "4.4.6", features = ["derive"] }
