@@ -1,4 +1,4 @@
-use std::{env, ffi::OsStr, fs, path::Path, process::Command};
+use std::{env, ffi::OsStr, fs, io, path::Path, process::Command};
 
 use anyhow::Ok;
 use clap::Parser;
@@ -30,12 +30,11 @@ impl Atmpt {
         let data_dir = dirs.data_dir();
 
         match args.template {
-            Some(template) => try_template(&template, editor, data_dir),
-            None => {
-                output_dir(data_dir);
-                Ok(())
-            }
+            Some(template) => try_template(&template, editor, data_dir)?,
+            None => output_dir(data_dir),
         }
+
+        Ok(())
     }
 }
 
@@ -59,7 +58,24 @@ fn try_template(template: &str, editor: &OsStr, data_dir: &Path) -> anyhow::Resu
         .wait()
         .expect("Could not launch editor!");
 
+    if ask_y_n("Would you like to delete this project?")? {
+        fs::remove_dir_all(&tmp_dir)?;
+    }
+
     Ok(())
+}
+
+fn ask_y_n(question: &str) -> anyhow::Result<bool> {
+    println!("{question} (y/n)");
+
+    let mut input = String::new();
+    io::stdin().read_line(&mut input)?;
+
+    match input.trim() {
+        "y" => Ok(true),
+        "n" => Ok(false),
+        _ => ask_y_n(question),
+    }
 }
 
 // modified from https://stackoverflow.com/a/65192210/15425442
