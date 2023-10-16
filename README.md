@@ -29,23 +29,15 @@ environment variable will be run in the new directory.
 ## Installing Manually
 
 Ensure you have [Rust] installed. After cloning this repo, `cd` into it and
-compile with:
+install it with:
 
 ```bash
-cargo build --release
-```
-
-Then you may either add the newly created `target/release` directory to your
-PATH or, **for Linux**, you could move the resulting binaries to be used
-anywhere:
-
-```bash
-mv target/release/atmpt /usr/local/bin/
+cargo install --path .
 ```
 
 Finally, you can create any templates you would like to use in atmpt's
 [data directory]. To get started with the default ones in this repository you
-may copy them:
+may copy them over:
 
 ```bash
 mkdir -p $(atmpt --template-dir)
@@ -62,6 +54,8 @@ output be used in the [installing] section):
 ```bash
 atmpt --template-dir
 ```
+
+_(The option could be shortened to `-d`)_
 
 In the printed directory you may put folders for atmpt to clone as temporary
 projects when run with their name as input.
