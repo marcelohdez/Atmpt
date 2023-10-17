@@ -19,10 +19,12 @@ pub struct Atmpt {
         group = "main",
         short = 'd',
         long = "template-dir",
-        conflicts_with = "template",
         help = "Output template directory"
     )]
     list_template_dir: bool,
+
+    #[arg(group = "main", short = 'l', long, help = "List available templates")]
+    list_templates: bool,
 }
 
 impl Atmpt {
@@ -30,9 +32,12 @@ impl Atmpt {
         let args = Self::parse();
         let data_dir = dirs.data_dir();
 
-        match args.template {
-            Some(template) => try_template(&template, editor, data_dir)?,
-            None => output_dir(data_dir),
+        if let Some(template) = args.template {
+            try_template(&template, editor, data_dir)?;
+        } else if args.list_template_dir {
+            output_dir(data_dir);
+        } else {
+            println!("Available templates:\n{}", Templates::try_from(data_dir)?);
         }
 
         Ok(())
