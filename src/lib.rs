@@ -49,7 +49,7 @@ fn try_template(template: &str, editor: &OsStr, data_dir: &Path) -> anyhow::Resu
     let templates = Templates::try_from(data_dir)?;
     let wanted_dir = templates.find(template)?;
 
-    let time = Local::now().format("%Y_%m_%dT%H:%M:%S");
+    let time = Local::now().format("%Y_%m_%d-%H_%M_%S");
     let tmp_dir = env::temp_dir().join(format!("{template}_{time}"));
     copy_dir_recursively(wanted_dir, &tmp_dir)?;
 
