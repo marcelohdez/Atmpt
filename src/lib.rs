@@ -62,6 +62,8 @@ fn try_template(template: &str, editor: &OsStr, data_dir: &Path) -> anyhow::Resu
 
     if ask_y_n("Would you like to delete this project?")? {
         fs::remove_dir_all(&tmp_dir)?;
+    } else {
+        println!("Saved as {tmp_dir:?}");
     }
 
     Ok(())
