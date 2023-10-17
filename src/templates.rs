@@ -32,10 +32,15 @@ impl Display for Templates {
 }
 
 impl TryFrom<&Path> for Templates {
-    type Error = std::io::Error;
+    type Error = anyhow::Error;
 
     fn try_from(data_dir: &Path) -> Result<Self, Self::Error> {
         let mut templates = Vec::new();
+
+        if !data_dir.exists() {
+            bail!("Template directory does not exist:\n  {data_dir:?}\nCreate some templates inside of it!");
+        }
+
         // should be ~/.local/share/atmpt/* on a linux system
         for entry in fs::read_dir(data_dir)? {
             let path = entry?.path();
