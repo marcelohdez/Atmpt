@@ -1,6 +1,7 @@
 use std::{env, ffi::OsStr, fs, io, path::Path, process::Command};
 
 use anyhow::Ok;
+use chrono::Local;
 use clap::Parser;
 use directories_next::ProjectDirs;
 use templates::Templates;
@@ -48,7 +49,8 @@ fn try_template(template: &str, editor: &OsStr, data_dir: &Path) -> anyhow::Resu
     let templates = Templates::try_from(data_dir)?;
     let wanted_dir = templates.find(template)?;
 
-    let tmp_dir = env::temp_dir().join(template);
+    let time = Local::now().format("%Y_%m_%dT%H:%M:%S");
+    let tmp_dir = env::temp_dir().join(format!("{template}_{time}"));
     copy_dir_recursively(wanted_dir, &tmp_dir)?;
 
     std::env::set_current_dir(&tmp_dir).expect("Could not change to temp directory!");
