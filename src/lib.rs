@@ -29,18 +29,12 @@ impl Atmpt {
         if let Some(template) = args.template {
             try_template(&template, editor, data_dir)?;
         } else if args.list_template_dir {
-            output_dir(data_dir);
+            println!("{}", data_dir.display());
         } else {
-            println!("Available templates:\n{}", Templates::try_from(data_dir)?);
+            println!("{}", Templates::try_from(data_dir)?);
         }
 
         Ok(())
-    }
-}
-
-fn output_dir(path: &Path) {
-    if let Some(str) = path.to_str() {
-        println!("{str}");
     }
 }
 

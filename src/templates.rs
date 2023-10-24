@@ -20,11 +20,11 @@ impl Deref for Templates {
 impl Display for Templates {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for path in &self.0 {
-            let Some(file_name) = path.file_name().and_then(|s| s.to_str()) else {
+            let Some(file_name) = path.file_name() else {
                 return Err(std::fmt::Error);
             };
 
-            write!(f, "  {}", file_name)?;
+            write!(f, "  {}", file_name.to_string_lossy())?;
         }
 
         Ok(())
@@ -38,7 +38,7 @@ impl TryFrom<&Path> for Templates {
         let mut templates = Vec::new();
 
         if !data_dir.exists() {
-            bail!("Template directory does not exist:\n  {data_dir:?}\nCreate some templates inside of it!");
+            bail!("Template directory does not exist:\n  {data_dir:?}\nCreate it along with some templates inside!");
         }
 
         // should be ~/.local/share/atmpt/* on a linux system
