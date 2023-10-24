@@ -43,7 +43,9 @@ fn try_template(template: &str, editor: &OsStr, data_dir: &Path) -> anyhow::Resu
     let wanted_dir = templates.find(template)?;
 
     let time = Local::now().format("%Y_%m_%d-%H_%M_%S");
-    let tmp_dir = env::temp_dir().join(format!("{template}_{time}"));
+    let tmp_dir = env::temp_dir()
+        .join("atmpt") // store tmp projects in folder
+        .join(format!("{template}_{time}"));
     copy_dir_recursively(wanted_dir, &tmp_dir)?;
 
     std::env::set_current_dir(&tmp_dir).expect("Could not change to temp directory!");
@@ -79,7 +81,7 @@ fn ask_y_n(question: &str) -> anyhow::Result<bool> {
 
 // modified from https://stackoverflow.com/a/65192210/15425442
 fn copy_dir_recursively(from: &Path, to: &Path) -> anyhow::Result<()> {
-    fs::create_dir(to)?;
+    fs::create_dir_all(to)?;
 
     for entry in fs::read_dir(from)? {
         let entry = entry?;
