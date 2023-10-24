@@ -12,18 +12,12 @@ pub mod templates;
 #[command(author, version, about)]
 #[group(required = true)]
 pub struct Atmpt {
-    #[arg(group = "main")]
     template: Option<String>,
 
-    #[arg(
-        group = "main",
-        short = 'd',
-        long = "template-dir",
-        help = "Output template directory"
-    )]
+    #[arg(short = 'd', long = "template-dir", help = "Output template directory")]
     list_template_dir: bool,
 
-    #[arg(group = "main", short = 'l', long, help = "List available templates")]
+    #[arg(short = 'l', long, help = "List available templates")]
     list_templates: bool,
 }
 
