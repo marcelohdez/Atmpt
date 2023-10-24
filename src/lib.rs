@@ -55,20 +55,22 @@ fn try_template(template: &str, editor: &OsStr, data_dir: &Path) -> anyhow::Resu
 
     if ask_y_n("Would you like to delete this project?")? {
         fs::remove_dir_all(&tmp_dir)?;
+        println!("Deleted.")
     } else {
-        println!("Saved as {tmp_dir:?}");
+        println!("Saved as {tmp_dir:?}.");
     }
 
     Ok(())
 }
 
 fn ask_y_n(question: &str) -> anyhow::Result<bool> {
-    println!("{question} (y/n)");
+    println!("{question} (Y/n)");
 
     let mut input = String::new();
     io::stdin().read_line(&mut input)?;
 
     match input.trim() {
+        "" => Ok(true), // default to yes if only enter is pressed
         "y" => Ok(true),
         "n" => Ok(false),
         _ => ask_y_n(question),
