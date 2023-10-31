@@ -1,4 +1,4 @@
-# Atmpt
+# atmpt
 
 Pronounced _attempt_, Atmpt is a simple CLI program which lets you quickly
 create a temporary project and open it in your chosen `$EDITOR` environment
@@ -6,6 +6,9 @@ variable.
 
 This makes testing some quick lines of code easy without having to open a new
 replit or creating a new project with boilerplate yourself.
+
+### Below is a showcase with the `$EDITOR` variable set to `nvim` for Neovim:
+[![asciicast](https://asciinema.org/a/5soMz3UBzMbXO2Nb7LQELtcsT.svg)](https://asciinema.org/a/5soMz3UBzMbXO2Nb7LQELtcsT)
 
 ## Running
 
