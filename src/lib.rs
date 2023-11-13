@@ -71,7 +71,7 @@ fn ask_y_n(question: &str) -> anyhow::Result<bool> {
     let mut input = String::new();
     io::stdin().read_line(&mut input)?;
 
-    match input.trim() {
+    match input.to_lowercase().trim() {
         "" => Ok(true), // default to yes if only enter is pressed
         "y" => Ok(true),
         "n" => Ok(false),
