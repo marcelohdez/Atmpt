@@ -21,12 +21,18 @@ pub struct Atmpt {
 #[derive(Debug, Parser)]
 #[group(required = true)]
 pub struct RequiredArgs {
+    #[arg(group = "main")]
     template: Option<String>,
 
-    #[arg(short = 'd', long = "template-dir", help = "Output template directory")]
+    #[arg(
+        group = "main",
+        short = 'd',
+        long = "template-dir",
+        help = "Output template directory"
+    )]
     list_template_dir: bool,
 
-    #[arg(short, long, help = "List available templates")]
+    #[arg(group = "main", short, long, help = "List available templates")]
     list_templates: bool,
 }
 
