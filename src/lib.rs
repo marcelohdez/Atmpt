@@ -12,7 +12,7 @@ pub mod templates;
 #[command(author, version, about)]
 pub struct Atmpt {
     #[command(flatten)]
-    required: ReqArgs,
+    required: RequiredArgs,
 
     #[arg(short, long, env = "VISUAL", help = "Use given editor for this run")]
     editor: Option<String>,
@@ -20,7 +20,7 @@ pub struct Atmpt {
 
 #[derive(Debug, Parser)]
 #[group(required = true)]
-pub struct ReqArgs {
+pub struct RequiredArgs {
     template: Option<String>,
 
     #[arg(short = 'd', long = "template-dir", help = "Output template directory")]
@@ -33,15 +33,16 @@ pub struct ReqArgs {
 impl Atmpt {
     pub fn parse_with(dirs: &ProjectDirs) -> anyhow::Result<()> {
         let args = Self::parse();
+        let req = args.required;
         let data_dir = dirs.data_dir();
 
-        if let Some(template) = args.required.template {
+        if let Some(template) = req.template {
             let Some(editor) = args.editor else {
                 bail!("No editor to use!"); // really should not happen
             };
 
             try_template(&template, &editor, data_dir)?;
-        } else if args.required.list_template_dir {
+        } else if req.list_template_dir {
             println!("{}", data_dir.display());
         } else {
             println!("{}", Templates::try_from(data_dir)?);
