@@ -19,15 +19,13 @@ impl Deref for Templates {
 
 impl Display for Templates {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for path in &self.0 {
-            let Some(file_name) = path.file_name() else {
-                return Err(std::fmt::Error);
-            };
+        let templates: Vec<_> = self
+            .iter()
+            .flat_map(|path| path.file_name())
+            .map(|name| name.to_string_lossy())
+            .collect();
 
-            write!(f, "  {}", file_name.to_string_lossy())?;
-        }
-
-        Ok(())
+        write!(f, "{}", templates.join("  "))
     }
 }
 
