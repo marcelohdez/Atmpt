@@ -1,6 +1,6 @@
-use std::{env, ffi::OsStr, fs, io, path::Path, process::Command};
+use std::{env, fs, io, path::Path, process::Command};
 
-use anyhow::Ok;
+use anyhow::{bail, Ok};
 use chrono::Local;
 use clap::Parser;
 use directories_next::ProjectDirs;
@@ -10,25 +10,44 @@ pub mod templates;
 
 #[derive(Debug, Parser)]
 #[command(author, version, about)]
-#[group(required = true)]
 pub struct Atmpt {
+    #[command(flatten)]
+    required: ReqArgs,
+
+    #[arg(
+        short,
+        long,
+        env = "EDITOR",
+        requires = "template",
+        help = "Use given editor for this run"
+    )]
+    editor: Option<String>,
+}
+
+#[derive(Debug, Parser)]
+#[group(required = true)]
+pub struct ReqArgs {
     template: Option<String>,
 
     #[arg(short = 'd', long = "template-dir", help = "Output template directory")]
     list_template_dir: bool,
 
-    #[arg(short = 'l', long, help = "List available templates")]
+    #[arg(short, long, help = "List available templates")]
     list_templates: bool,
 }
 
 impl Atmpt {
-    pub fn parse_with(editor: &OsStr, dirs: &ProjectDirs) -> anyhow::Result<()> {
+    pub fn parse_with(dirs: &ProjectDirs) -> anyhow::Result<()> {
         let args = Self::parse();
         let data_dir = dirs.data_dir();
 
-        if let Some(template) = args.template {
-            try_template(&template, editor, data_dir)?;
-        } else if args.list_template_dir {
+        if let Some(template) = args.required.template {
+            let Some(editor) = args.editor else {
+                bail!("No editor to use!"); // really should not happen
+            };
+
+            try_template(&template, &editor, data_dir)?;
+        } else if args.required.list_template_dir {
             println!("{}", data_dir.display());
         } else {
             println!("{}", Templates::try_from(data_dir)?);
@@ -38,7 +57,7 @@ impl Atmpt {
     }
 }
 
-fn try_template(template: &str, editor: &OsStr, data_dir: &Path) -> anyhow::Result<()> {
+fn try_template(template: &str, editor: &str, data_dir: &Path) -> anyhow::Result<()> {
     let templates = Templates::try_from(data_dir)?;
     let wanted_dir = templates.find(template)?;
 
