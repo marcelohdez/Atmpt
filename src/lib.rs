@@ -14,13 +14,7 @@ pub struct Atmpt {
     #[command(flatten)]
     required: ReqArgs,
 
-    #[arg(
-        short,
-        long,
-        env = "EDITOR",
-        requires = "template",
-        help = "Use given editor for this run"
-    )]
+    #[arg(short, long, env = "VISUAL", help = "Use given editor for this run")]
     editor: Option<String>,
 }
 

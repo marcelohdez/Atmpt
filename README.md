@@ -1,13 +1,14 @@
 # atmpt
 
 Pronounced _attempt_, Atmpt is a simple CLI program which lets you quickly
-create a temporary project and open it in your chosen `$EDITOR` environment
+create a temporary project and open it in your chosen `$VISUAL` environment
 variable.
 
 This makes testing some quick lines of code easy without having to open a new
 replit or creating a new project with boilerplate yourself.
 
-### Below is a showcase with the `$EDITOR` variable set to `nvim` for Neovim:
+### Below is a showcase with the `$VISUAL` variable set to `nvim` for Neovim:
+
 [![asciicast](https://asciinema.org/a/5soMz3UBzMbXO2Nb7LQELtcsT.svg)](https://asciinema.org/a/5soMz3UBzMbXO2Nb7LQELtcsT)
 
 ## Running
@@ -26,7 +27,7 @@ would run
 atmpt cpp
 ```
 
-Afterwards, whatever you have set as your `$EDITOR`
+Afterwards, whatever you have set as your `$VISUAL`
 environment variable will be run in the new directory.
 
 ## Installing Manually
