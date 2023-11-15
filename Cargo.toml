@@ -2,6 +2,11 @@
 name = "atmpt"
 authors = ["Marcelo Hernandez <marcelohdez.inq@gmail.com>"]
 description = "Attempt quick, temporary code projects"
+homepage = "https://github.com/marcelohdez/atmpt"
+license = "GPL-3.0-only"
+license-file = "LICENSE"
+keywords = ["cli"]
+
 version = "0.1.0"
 edition = "2021"
 
