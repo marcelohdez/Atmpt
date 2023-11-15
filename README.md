@@ -30,23 +30,30 @@ atmpt cpp
 Afterwards, whatever you have set as your `$VISUAL`
 environment variable will be run in the new directory.
 
-## Installing Manually
+## Building
 
 Ensure you have [Rust] installed. After cloning this repo, `cd` into it and
-install it with:
+install by running:
 
 ```bash
 cargo install --path .
 ```
 
-Finally, you can create any templates you would like to use in atmpt's
-[data directory]. To get started with the default ones in this repository you
-may copy them over:
+This should place the `atmpt` binary in `$HOME/.cargo/bin`, but you will not
+have any templates to use. You may either create them in atmpt's
+[data directory] _(along with the directory itself if it does not exist
+already)_, or you could use the default ones included in this repo _(example
+given for Unix-based systems like Linux and MacOS)_:
 
 ```bash
 mkdir -p $(atmpt --list-template-dir)
 cp -r templates/* $(atmpt --list-template-dir)
 ```
+
+Additionally, autocompletion files for several shells are created in a new
+`completions` directory. These should be placed in your respective shell's
+autocompletion directory, for example, `zsh` reads completion files from any
+directory in your `$fpath` environment variable.
 
 ## Data Directory
 
@@ -70,7 +77,7 @@ Atmpt is licensed under the GPLv3, a free and open source license. For more
 information, please read the [LICENSE] file in this repositories' root
 directory.
 
-[installing]: https://github.com/marcelohdez/Atmpt/#installing-manually
+[installing]: https://github.com/marcelohdez/Atmpt/#building
 [data directory]: https://github.com/marcelohdez/Atmpt/#data-directory
 [Rust]: https://www.rust-lang.org
 [LICENSE]: https://github.com/marcelohdez/Atmpt/blob/master/LICENSE
