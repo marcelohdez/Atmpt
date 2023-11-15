@@ -7,7 +7,7 @@ variable.
 This makes testing some quick lines of code easy without having to open a new
 replit or creating a new project with boilerplate yourself.
 
-### Below is a showcase with the `$VISUAL` variable set to `nvim` for Neovim:
+### Below is a showcase with the `$VISUAL` variable set to `nvim` for Neovim: (old)
 
 [![asciicast](https://asciinema.org/a/5soMz3UBzMbXO2Nb7LQELtcsT.svg)](https://asciinema.org/a/5soMz3UBzMbXO2Nb7LQELtcsT)
 
@@ -44,8 +44,8 @@ Finally, you can create any templates you would like to use in atmpt's
 may copy them over:
 
 ```bash
-mkdir -p $(atmpt --template-dir)
-cp -r templates/* $(atmpt --template-dir)
+mkdir -p $(atmpt --list-template-dir)
+cp -r templates/* $(atmpt --list-template-dir)
 ```
 
 ## Data Directory
@@ -56,7 +56,7 @@ Atmpt offers an option to print it out on your system (you may have seen its
 output be used in the [installing] section):
 
 ```bash
-atmpt --template-dir
+atmpt --list-template-dir
 ```
 
 _(The option could be shortened to `-d`)_
