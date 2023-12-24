@@ -7,9 +7,11 @@ variable.
 This makes testing some quick lines of code easy without having to open a new
 replit or creating a new project with boilerplate yourself.
 
-### Below is a showcase with the `$VISUAL` variable set to `nvim` for Neovim: (old)
+## Showcase
 
-[![asciicast](https://asciinema.org/a/5soMz3UBzMbXO2Nb7LQELtcsT.svg)](https://asciinema.org/a/5soMz3UBzMbXO2Nb7LQELtcsT)
+_(`$VISUAL` variable set to `nvim` for Neovim)_
+
+[![asciicast](https://asciinema.org/a/628728.svg)](https://asciinema.org/a/628728)
 
 ## Running
 
@@ -31,6 +33,8 @@ Afterwards, whatever you have set as your `$VISUAL`
 environment variable will be run in the new directory.
 
 ## Building
+
+_(Currently the only installation method)_
 
 Ensure you have [Rust] installed. After cloning this repo, `cd` into it and
 install by running:
