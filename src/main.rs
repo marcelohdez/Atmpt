@@ -56,27 +56,25 @@ fn try_template(template: &str, editor: &str, delete: bool, data_dir: &Path) -> 
         .wait()
         .expect("Could not launch editor!");
 
-    if delete || ask_y_n("Would you like to delete this project?")? {
-        fs::remove_dir_all(&tmp_dir)?;
-        println!("Deleted.")
-    } else {
+    if delete || ask_y_n("Would you like to keep this project?")? {
         println!("Saved as {tmp_dir:?}.");
+    } else {
+        fs::remove_dir_all(&tmp_dir)?;
     }
 
     Ok(())
 }
 
 fn ask_y_n(question: &str) -> anyhow::Result<bool> {
-    println!("{question} (Y/n)");
+    println!("{question} (y/N)");
 
     let mut input = String::new();
     io::stdin().read_line(&mut input)?;
 
     match input.to_lowercase().trim() {
-        "" => Ok(true), // default to yes if only enter is pressed
         "y" => Ok(true),
-        "n" => Ok(false),
-        _ => ask_y_n(question),
+        "n" | "" => Ok(false),  // default to no if no input
+        _ => ask_y_n(question), // redo if wrong input
     }
 }
 
