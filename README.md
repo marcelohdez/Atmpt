@@ -32,26 +32,26 @@ atmpt cpp
 Afterwards, whatever you have set as your `$VISUAL`
 environment variable will be run in the new directory.
 
-## Building
+## Installing
 
-_(Currently the only installation method)_
+### Building Manually
 
-Ensure you have [Rust] installed. After cloning this repo, `cd` into it and
-install by running:
+_Currently the only installation method_, ensure you have [Rust] installed.
+
+After cloning this repo, `cd` into it and install by running:
 
 ```bash
 cargo install --path .
 ```
 
-This should place the `atmpt` binary in `$HOME/.cargo/bin`, but you will not
-have any templates to use. You may either create them in atmpt's
-[data directory] _(along with the directory itself if it does not exist
-already)_, or you could use the default ones included in this repo _(example
-given for Unix-based systems like Linux and MacOS)_:
+This should place `atmpt` in `$HOME/.cargo/bin`, but you will not have any
+templates. You may either create them in the [data directory], or you could use
+the default ones included in this repo _(example given for Unix-like systems
+e.g. Linux or MacOS)_:
 
 ```bash
-mkdir -p $(atmpt --list-template-dir)
-cp -r templates/* $(atmpt --list-template-dir)
+mkdir -p $(atmpt -d)
+cp -r templates/* $(atmpt -d)
 ```
 
 Additionally, autocompletion files for several shells are created in a new
@@ -70,7 +70,7 @@ output be used in the [installing] section):
 atmpt --list-template-dir
 ```
 
-_(The option could be shortened to `-d`)_
+_(This option can be shortened to `-d`, as seen in examples)_
 
 In the printed directory you may put folders for atmpt to clone as temporary
 projects when run with their name as input.
@@ -81,7 +81,7 @@ Atmpt is licensed under the GPLv3, a free and open source license. For more
 information, please read the [LICENSE] file in this repositories' root
 directory.
 
-[installing]: https://github.com/marcelohdez/Atmpt/#building
+[installing]: https://github.com/marcelohdez/Atmpt/#installing
 [data directory]: https://github.com/marcelohdez/Atmpt/#data-directory
 [Rust]: https://www.rust-lang.org
 [LICENSE]: https://github.com/marcelohdez/Atmpt/blob/master/LICENSE
