@@ -5,7 +5,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use anyhow::{anyhow, bail};
+use anyhow::{anyhow, bail, Context};
 
 pub struct Templates(Vec<PathBuf>);
 
@@ -37,9 +37,8 @@ impl TryFrom<&Path> for Templates {
             bail!("Template directory does not exist:\n  {data_dir:?}\nCreate it along with some templates inside!");
         }
 
-        let Ok(entries) = fs::read_dir(data_dir) else {
-            bail!("Could not read data dir:\n{data_dir:?}\nDoes it exist?")
-        };
+        let entries =
+            fs::read_dir(data_dir).with_context(|| format!("Failed to read {data_dir:?}"))?;
 
         let mut templates = Vec::new();
         for entry in entries {
