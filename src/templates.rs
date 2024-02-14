@@ -5,7 +5,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use anyhow::bail;
+use anyhow::{anyhow, bail};
 
 pub struct Templates(Vec<PathBuf>);
 
@@ -33,14 +33,16 @@ impl TryFrom<&Path> for Templates {
     type Error = anyhow::Error;
 
     fn try_from(data_dir: &Path) -> Result<Self, Self::Error> {
-        let mut templates = Vec::new();
-
         if !data_dir.exists() {
             bail!("Template directory does not exist:\n  {data_dir:?}\nCreate it along with some templates inside!");
         }
 
-        // should be ~/.local/share/atmpt/* on a linux system
-        for entry in fs::read_dir(data_dir)? {
+        let Ok(entries) = fs::read_dir(data_dir) else {
+            bail!("Could not read data dir:\n{data_dir:?}\nDoes it exist?")
+        };
+
+        let mut templates = Vec::new();
+        for entry in entries {
             let path = entry?.path();
 
             if path.is_dir() {
@@ -62,7 +64,7 @@ impl Templates {
             }
         }
 
-        bail!(format!(
+        Err(anyhow!(
             "No template '{name}' exists! Available templates:\n{self}"
         ))
     }
