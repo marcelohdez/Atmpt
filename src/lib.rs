@@ -6,7 +6,7 @@ pub use templates::*;
 
 use std::{env, fs, io, path::Path, process::Command};
 
-use anyhow::Context;
+use anyhow::{bail, Context, Ok};
 use chrono::Local;
 
 pub fn try_template(
@@ -24,20 +24,32 @@ pub fn try_template(
         .join(format!("{template}_{time}"));
     copy_dir_recursively(wanted_dir, &tmp_dir)?;
 
+    let res = summon_and_wait(editor, &tmp_dir);
+
+    if res.is_ok() && !delete && ask_y_n("Would you like to keep this project?")? {
+        println!("Saved as {tmp_dir:?}.");
+    } else {
+        fs::remove_dir_all(&tmp_dir)
+            .with_context(|| format!("Failed to remove directory {tmp_dir:?}"))?;
+
+        println!("Deleted.");
+
+        if let Err(e) = res {
+            bail!(e);
+        }
+    }
+
+    Ok(())
+}
+
+fn summon_and_wait(editor: &str, cwd: &Path) -> anyhow::Result<()> {
     Command::new(editor)
-        .current_dir(&tmp_dir)
+        .current_dir(cwd)
         .arg(".")
         .spawn()
         .context("Failed to launch editor!")?
         .wait()
         .context("Failed waiting for editor!")?;
-
-    if !delete && ask_y_n("Would you like to keep this project?")? {
-        println!("Saved as {tmp_dir:?}.");
-    } else {
-        fs::remove_dir_all(&tmp_dir)
-            .with_context(|| format!("Failed to remove directory {tmp_dir:?}"))?;
-    }
 
     Ok(())
 }

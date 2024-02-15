@@ -15,6 +15,9 @@ fn cmd() -> Command {
     Command::cargo_bin("atmpt").unwrap()
 }
 
+// FIXME: Due to the folder being named with the time of creation, multiple
+// tests using the same language template may clash and fail...
+
 // ======= Failures =======
 
 #[test]
@@ -24,7 +27,7 @@ fn fail_on_conflicting_opts() {
 
 #[test]
 fn fail_on_conflicting_opts_with_template() {
-    cmd().args(["cpp", "-l", "-d"]).assert().failure();
+    cmd().args(["c", "-l", "-d"]).assert().failure();
 }
 
 #[test]
@@ -32,8 +35,12 @@ fn incorrect_template() {
     cmd().arg("_blahblah!").assert().failure();
 }
 
-// ======= Successes =======
+#[test]
+fn incorrect_editor() {
+    cmd().args(["-e", "fakeeditor", "java"]).assert().failure();
+}
 
+// ======= Successes =======
 #[test]
 fn correct_template() {
     cmd().arg("cpp").assert().success();
