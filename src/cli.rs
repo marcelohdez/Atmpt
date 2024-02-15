@@ -16,8 +16,8 @@ pub struct Atmpt {
     #[arg(short = 'n', long, hide_env = true, env = ALWAYS_DELETE_KEY, help = "Delete project on exit")]
     pub delete: bool,
 
-    #[arg(long, hide = true, env = TEMPLATE_DIR_KEY)] // override template dir
-    pub template_dir: Option<String>,
+    #[arg(long, hide_env = true, env = TEMPLATE_DIR_KEY, help = "Override template dir")]
+    pub new_template_dir: Option<String>,
 }
 
 #[derive(Debug, Parser)]

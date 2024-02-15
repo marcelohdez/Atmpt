@@ -14,7 +14,7 @@ fn main() -> anyhow::Result<()> {
     let req = args.required;
 
     let mut data_dir = Cow::Borrowed(dirs.data_dir());
-    if let Some(new_dir) = args.template_dir {
+    if let Some(new_dir) = args.new_template_dir {
         data_dir = Cow::Owned(PathBuf::from(new_dir));
     };
 
