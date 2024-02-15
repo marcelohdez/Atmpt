@@ -24,12 +24,13 @@ pub fn try_template(
         .join(format!("{template}_{time}"));
     copy_dir_recursively(wanted_dir, &tmp_dir)?;
 
-    std::env::set_current_dir(&tmp_dir).expect("Could not change to temp directory!");
     Command::new(editor)
-        .arg(&tmp_dir)
-        .spawn()?
+        .current_dir(&tmp_dir)
+        .arg(".")
+        .spawn()
+        .context("Failed to launch editor!")?
         .wait()
-        .expect("Could not launch editor!");
+        .context("Failed waiting for editor!")?;
 
     if delete || ask_y_n("Would you like to keep this project?")? {
         println!("Saved as {tmp_dir:?}.");

@@ -42,7 +42,7 @@ impl TryFrom<&Path> for Templates {
 
         let mut templates = Vec::new();
         for entry in entries {
-            let path = entry?.path();
+            let path = entry.context("Failed to unwrap templates entry!")?.path();
 
             if path.is_dir() {
                 templates.push(path);
