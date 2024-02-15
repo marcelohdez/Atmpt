@@ -32,7 +32,7 @@ pub fn try_template(
         .wait()
         .context("Failed waiting for editor!")?;
 
-    if delete || ask_y_n("Would you like to keep this project?")? {
+    if !delete && ask_y_n("Would you like to keep this project?")? {
         println!("Saved as {tmp_dir:?}.");
     } else {
         fs::remove_dir_all(&tmp_dir)
