@@ -2,7 +2,7 @@ use clap::Parser;
 
 pub const EDITOR_KEY: &str = "VISUAL";
 pub const ALWAYS_DELETE_KEY: &str = "ATMPT_ALWAYS_DELETE";
-pub const TEMPLATE_DIR_KEY: &str = "ATMPT_DATA_DIR";
+pub const DATA_DIR_KEY: &str = "ATMPT_DATA_DIR";
 
 #[derive(Debug, Parser)]
 #[command(author, version, about)]
@@ -16,8 +16,8 @@ pub struct Atmpt {
     #[arg(short = 'n', long, hide_env = true, env = ALWAYS_DELETE_KEY, help = "Delete project on exit")]
     pub delete: bool,
 
-    #[arg(long, hide_env = true, env = TEMPLATE_DIR_KEY, help = "Override template dir")]
-    pub new_template_dir: Option<String>,
+    #[arg(long, hide_env = true, env = DATA_DIR_KEY, help = "Override data directory")]
+    pub data_dir: Option<String>,
 }
 
 #[derive(Debug, Parser)]

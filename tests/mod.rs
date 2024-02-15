@@ -1,7 +1,7 @@
 use std::{env, path::PathBuf};
 
 use assert_cmd::Command;
-use atmpt::{ALWAYS_DELETE_KEY, EDITOR_KEY, TEMPLATE_DIR_KEY};
+use atmpt::{ALWAYS_DELETE_KEY, DATA_DIR_KEY, EDITOR_KEY};
 
 const PROJECT_DIR: &str = env!("CARGO_MANIFEST_DIR");
 
@@ -10,7 +10,7 @@ fn cmd() -> Command {
     env::set_var(ALWAYS_DELETE_KEY, "true");
 
     let templates = PathBuf::from_iter([PROJECT_DIR, "templates"]);
-    env::set_var(TEMPLATE_DIR_KEY, templates.to_string_lossy().as_ref());
+    env::set_var(DATA_DIR_KEY, templates.to_string_lossy().as_ref());
 
     Command::cargo_bin("atmpt").unwrap()
 }
