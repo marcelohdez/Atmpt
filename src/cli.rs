@@ -10,10 +10,10 @@ pub struct Atmpt {
     #[command(flatten)]
     pub required: RequiredArgs,
 
-    #[arg(short, long, env = EDITOR_KEY, help = "Use given editor for this run")]
+    #[arg(short, long, env = EDITOR_KEY, help = "Editor to use")]
     pub editor: Option<String>,
 
-    #[arg(short = 'y', long, env = ALWAYS_DELETE_KEY, help = "Autodelete project on exit")]
+    #[arg(short = 'n', long, hide_env = true, env = ALWAYS_DELETE_KEY, help = "Delete project on exit")]
     pub delete: bool,
 
     #[arg(long, hide = true, env = TEMPLATE_DIR_KEY)] // override template dir
