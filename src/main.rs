@@ -3,7 +3,7 @@ use std::{borrow::Cow, path::PathBuf};
 use anyhow::bail;
 use atmpt::{templates::Templates, Atmpt};
 use clap::Parser;
-use directories_next::ProjectDirs;
+use directories::ProjectDirs;
 
 fn main() -> anyhow::Result<()> {
     let Some(dirs) = ProjectDirs::from("me", "marcelohdez", "Atmpt") else {
