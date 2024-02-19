@@ -54,10 +54,12 @@ mkdir -p $(atmpt -d)
 cp -r templates/* $(atmpt -d)
 ```
 
-Additionally, autocompletion files for several shells are created in a new
-`completions` directory. These should be placed in your respective shell's
-autocompletion directory, for example, `zsh` reads completion files from any
-directory in your `$fpath` environment variable.
+Additionally, _autocompletion files_ for several shells are created in cargo's
+`$OUTDIR` directory, which should have been printed out by cargo during
+compilation, something like: `./target/release/build/atmpt-<hash>/out/`. These
+should be placed in your respective shell's autocompletion directory, for
+example, `zsh` reads completion files from any directory in your `$fpath`
+environment variable.
 
 ## Data Directory
 
