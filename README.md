@@ -34,20 +34,27 @@ environment variable will be run in the new directory.
 
 ## Installing
 
-### Building Manually
+**Ensure you have [Rust] installed.**
 
-_Currently the only installation method_, ensure you have [Rust] installed.
+You can install from `crates.io` using `cargo`:
 
-After cloning this repo, `cd` into it and install by running:
+```bash
+cargo install atmpt
+```
+
+_Or_ you can build manually; After cloning this repo, `cd` into it and install by
+running:
 
 ```bash
 cargo install --path .
 ```
 
-This should place `atmpt` in `$HOME/.cargo/bin`, but you will not have any
-templates. You may either create them in the [data directory], or you could use
-the default ones included in this repo _(example given for Unix-like systems
-e.g. Linux or MacOS)_:
+### Templates
+
+Both of the methods above should place `atmpt` in `$HOME/.cargo/bin`, but you
+will not have any templates. You may either create them in the [data directory],
+or you could use the default ones included in this repo _(example given for
+Unix-like systems e.g. Linux or MacOS)_:
 
 ```bash
 mkdir -p $(atmpt -d)
