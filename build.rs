@@ -1,6 +1,6 @@
-use std::{fs, io::Result, path::PathBuf};
+use std::{env, io::Result};
 
-use clap::CommandFactory;
+use clap::{CommandFactory, ValueEnum};
 use clap_complete::{generate_to, Shell};
 
 include!("src/cli.rs");
@@ -8,12 +8,12 @@ include!("src/cli.rs");
 fn main() -> Result<()> {
     let mut cli = Atmpt::command();
 
-    let dir = PathBuf::from("completions");
-    if !dir.is_dir() {
-        fs::create_dir(&dir)?;
-    }
+    let dir = match env::var_os("OUT_DIR") {
+        None => return Ok(()),
+        Some(dir) => dir,
+    };
 
-    for shell in [Shell::Bash, Shell::Zsh, Shell::Fish, Shell::PowerShell] {
+    for &shell in Shell::value_variants() {
         let comp_file = generate_to(shell, &mut cli, "atmpt", &dir)?;
         println!("cargo:warning=generated completion for {shell}: {comp_file:?}");
     }
