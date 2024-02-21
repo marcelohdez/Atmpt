@@ -2,6 +2,7 @@ use clap::Parser;
 
 pub const EDITOR_KEY: &str = "VISUAL";
 pub const ALWAYS_DELETE_KEY: &str = "ATMPT_ALWAYS_DELETE";
+pub const ALWAYS_KEEP_KEY: &str = "ATMPT_ALWAYS_KEEP";
 pub const DATA_DIR_KEY: &str = "ATMPT_DATA_DIR";
 
 #[derive(Debug, Parser)]
@@ -13,8 +14,24 @@ pub struct Atmpt {
     #[arg(short, long, env = EDITOR_KEY, help = "Editor to use")]
     pub editor: Option<String>,
 
-    #[arg(short = 'n', long, hide_env = true, env = ALWAYS_DELETE_KEY, help = "Delete project on exit")]
+    #[arg(
+        short = 'n',
+        long,
+        hide_env = true,
+        conflicts_with = "keep",
+        env = ALWAYS_DELETE_KEY,
+        help = "Delete project on exit"
+    )]
     pub delete: bool,
+
+    #[arg(
+        short = 'y',
+        long,
+        hide_env = true,
+        env = ALWAYS_KEEP_KEY,
+        help = "Keep project on exit"
+    )]
+    pub keep: bool,
 
     #[arg(long, hide_env = true, env = DATA_DIR_KEY, help = "Override data directory")]
     pub data_dir: Option<String>,
@@ -31,4 +48,24 @@ pub struct RequiredArgs {
 
     #[arg(group = "main", short, long, help = "List available templates")]
     pub list_templates: bool,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum AfterAction {
+    Keep,
+    Delete,
+}
+
+impl Atmpt {
+    pub fn after_action(&self) -> Option<AfterAction> {
+        if self.keep {
+            return Some(AfterAction::Keep);
+        }
+
+        if self.delete {
+            return Some(AfterAction::Delete);
+        }
+
+        None
+    }
 }

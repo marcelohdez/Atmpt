@@ -27,7 +27,12 @@ fn fail_on_conflicting_opts() {
 
 #[test]
 fn fail_on_conflicting_opts_with_template() {
-    cmd().args(["c", "-l", "-d"]).assert().failure();
+    cmd().args(["c", "-ld"]).assert().failure();
+}
+
+#[test]
+fn fail_on_keep_and_delete() {
+    cmd().args(["python", "-ny"]).assert().failure();
 }
 
 #[test]

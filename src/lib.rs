@@ -12,8 +12,8 @@ use chrono::Local;
 pub fn try_template(
     template: &str,
     editor: &str,
-    delete: bool,
     data_dir: &Path,
+    action: Option<AfterAction>,
 ) -> anyhow::Result<()> {
     let templates = Templates::try_from(data_dir)?;
     let wanted_dir = templates.find(template)?;
@@ -26,7 +26,7 @@ pub fn try_template(
 
     let res = summon_and_wait(editor, &tmp_dir);
 
-    if res.is_ok() && !delete && ask_y_n("Would you like to keep this project?")? {
+    if res.is_ok() && should_keep(action)? {
         println!("Saved as {tmp_dir:?}.");
     } else {
         fs::remove_dir_all(&tmp_dir)
@@ -40,6 +40,13 @@ pub fn try_template(
     }
 
     Ok(())
+}
+
+fn should_keep(action: Option<AfterAction>) -> anyhow::Result<bool> {
+    match action {
+        Some(action) => Ok(action == AfterAction::Keep),
+        None => ask_y_n("Would you like to keep this code?"),
+    }
 }
 
 fn summon_and_wait(editor: &str, cwd: &Path) -> anyhow::Result<()> {
