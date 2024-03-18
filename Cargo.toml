@@ -3,6 +3,7 @@ name = "atmpt"
 authors = ["Marcelo Hernandez <marcelohdez.inq@gmail.com>"]
 description = "Attempt quick, temporary code projects"
 homepage = "https://github.com/marcelohdez/atmpt"
+repository = "https://github.com/marcelohdez/atmpt"
 license = "GPL-3.0-only"
 keywords = ["cli"]
 
