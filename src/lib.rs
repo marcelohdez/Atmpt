@@ -1,10 +1,18 @@
 pub mod cli;
+pub mod session;
 pub mod templates;
 
 pub use cli::*;
+use session::Session;
 pub use templates::*;
 
-use std::{env, fs, io, path::Path, process::Command};
+use std::{
+    env,
+    fs::{self, File},
+    io::{self, BufWriter},
+    path::Path,
+    process::Command,
+};
 
 use anyhow::{bail, Context, Ok};
 use chrono::Local;
@@ -17,26 +25,28 @@ pub fn try_template(
 ) -> anyhow::Result<()> {
     let templates = Templates::try_from(data_dir)?;
     let wanted_dir = templates.find(template)?;
+    let tmp_dir = env::temp_dir().join("atmpt");
 
     let time = Local::now().format("%Y_%m_%d-%H_%M_%S");
-    let tmp_dir = env::temp_dir()
-        .join("atmpt") // store tmp projects in folder
-        .join(format!("{template}_{time}"));
-    copy_dir_recursively(wanted_dir, &tmp_dir)?;
+    let project_dir = tmp_dir.join(format!("{template}_{time}"));
 
-    let res = summon_and_wait(editor, &tmp_dir);
+    copy_dir_recursively(wanted_dir, &project_dir)?;
+    if let Err(e) = summon_and_wait(editor, &project_dir) {
+        remove_attempt(&project_dir)?;
+        bail!(e);
+    }
 
-    if res.is_ok() && should_keep(action)? {
-        println!("Saved as {tmp_dir:?}.");
+    // save session data to file
+    let file = File::create(tmp_dir.join("session.json"))?;
+    let session = Session {
+        last_template: template.to_owned(),
+    };
+    serde_json::to_writer(BufWriter::new(file), &session)?;
+
+    if should_keep(action)? {
+        println!("Saved as {project_dir:?}.");
     } else {
-        fs::remove_dir_all(&tmp_dir)
-            .with_context(|| format!("Failed to remove directory {tmp_dir:?}"))?;
-
-        println!("Deleted.");
-
-        if let Err(e) = res {
-            bail!(e);
-        }
+        remove_attempt(&project_dir)?;
     }
 
     Ok(())
@@ -47,6 +57,14 @@ fn should_keep(action: Option<AfterAction>) -> anyhow::Result<bool> {
         Some(action) => Ok(action == AfterAction::Keep),
         None => ask_y_n("Would you like to keep this code?"),
     }
+}
+
+fn remove_attempt(tmp_dir: &Path) -> anyhow::Result<()> {
+    fs::remove_dir_all(tmp_dir)
+        .with_context(|| format!("Failed to remove directory {tmp_dir:?}"))?;
+
+    println!("Deleted.");
+    Ok(())
 }
 
 fn summon_and_wait(editor: &str, cwd: &Path) -> anyhow::Result<()> {
