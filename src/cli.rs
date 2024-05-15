@@ -48,6 +48,9 @@ pub struct RequiredArgs {
 
     #[arg(group = "main", short, long, help = "List available templates")]
     pub list_templates: bool,
+
+    #[arg(group = "main", short, long, help = "Retry last template")]
+    pub retry: bool,
 }
 
 #[derive(Debug, PartialEq, Eq)]

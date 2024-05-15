@@ -10,12 +10,20 @@ use std::{
     env,
     fs::{self, File},
     io::{self, BufWriter},
-    path::Path,
+    path::{Path, PathBuf},
     process::Command,
 };
 
 use anyhow::{bail, Context, Ok};
 use chrono::Local;
+
+pub fn get_atmpt_dir() -> PathBuf {
+    env::temp_dir().join("atmpt")
+}
+
+pub fn get_session_path() -> PathBuf {
+    get_atmpt_dir().join("session.json")
+}
 
 pub fn try_template(
     template: &str,
@@ -25,7 +33,7 @@ pub fn try_template(
 ) -> anyhow::Result<()> {
     let templates = Templates::try_from(data_dir)?;
     let wanted_dir = templates.find(template)?;
-    let tmp_dir = env::temp_dir().join("atmpt");
+    let tmp_dir = get_atmpt_dir();
 
     let time = Local::now().format("%Y_%m_%d-%H_%M_%S");
     let project_dir = tmp_dir.join(format!("{template}_{time}"));
@@ -37,7 +45,7 @@ pub fn try_template(
     }
 
     // save session data to file
-    let file = File::create(tmp_dir.join("session.json"))?;
+    let file = File::create(get_session_path())?;
     let session = Session {
         last_template: template.to_owned(),
     };
