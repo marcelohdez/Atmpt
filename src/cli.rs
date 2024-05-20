@@ -12,7 +12,7 @@ pub struct Atmpt {
     pub required: RequiredArgs,
 
     #[arg(short, long, env = EDITOR_KEY, help = "Editor to use")]
-    pub editor: Option<String>,
+    pub editor: String,
 
     #[arg(
         short = 'n',
@@ -51,6 +51,9 @@ pub struct RequiredArgs {
 
     #[arg(group = "main", short, long, help = "Retry last template")]
     pub retry: bool,
+
+    #[arg(group = "main", short, long, help = "Open last modified attempt")]
+    pub previous: bool,
 }
 
 #[derive(Debug, PartialEq, Eq)]

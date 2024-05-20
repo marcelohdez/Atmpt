@@ -60,6 +60,18 @@ pub fn try_template(
     Ok(())
 }
 
+pub fn summon_and_wait(editor: &str, cwd: &Path) -> anyhow::Result<()> {
+    Command::new(editor)
+        .current_dir(cwd)
+        .arg(".")
+        .spawn()
+        .context("Failed to launch editor!")?
+        .wait()
+        .context("Failed waiting for editor!")?;
+
+    Ok(())
+}
+
 fn should_keep(action: Option<AfterAction>) -> anyhow::Result<bool> {
     match action {
         Some(action) => Ok(action == AfterAction::Keep),
@@ -72,18 +84,6 @@ fn remove_attempt(tmp_dir: &Path) -> anyhow::Result<()> {
         .with_context(|| format!("Failed to remove directory {tmp_dir:?}"))?;
 
     println!("Deleted.");
-    Ok(())
-}
-
-fn summon_and_wait(editor: &str, cwd: &Path) -> anyhow::Result<()> {
-    Command::new(editor)
-        .current_dir(cwd)
-        .arg(".")
-        .spawn()
-        .context("Failed to launch editor!")?
-        .wait()
-        .context("Failed waiting for editor!")?;
-
     Ok(())
 }
 
