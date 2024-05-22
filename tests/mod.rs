@@ -19,7 +19,6 @@ fn cmd() -> Command {
 // tests using the same language template may clash and fail...
 
 // ======= Failures =======
-
 #[test]
 fn fail_on_conflicting_opts() {
     cmd().args(["-l", "-d"]).assert().failure();
@@ -36,17 +35,41 @@ fn fail_on_keep_and_delete() {
 }
 
 #[test]
-fn incorrect_template() {
+fn fail_on_incorrect_template() {
     cmd().arg("_blahblah!").assert().failure();
 }
 
 #[test]
-fn incorrect_editor() {
+fn fail_on_incorrect_editor() {
     cmd().args(["-e", "fakeeditor", "java"]).assert().failure();
 }
 
+#[test]
+fn fail_on_no_args() {
+    cmd().assert().failure();
+}
+
+// TODO: Some way of setting each test's dir so this does not make pass_on_retry fail
+//
+//#[test]
+//fn fail_on_retry_without_session_data() {
+//    let session = get_session_path();
+//
+//    if session.exists() {
+//        fs::remove_file(get_session_path()).unwrap();
+//    }
+//
+//    cmd().arg("-r").assert().failure();
+//}
+
 // ======= Successes =======
 #[test]
-fn correct_template() {
+fn pass_on_correct_template() {
     cmd().arg("cpp").assert().success();
 }
+
+//#[test]
+//fn pass_on_retry() {
+//    cmd().arg("cpp").assert().success();
+//    cmd().arg("-r").assert().success();
+//}
