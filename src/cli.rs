@@ -37,7 +37,7 @@ pub struct Atmpt {
     #[arg(long, hide_env = true, env = DATA_DIR_KEY, help = "Override templates directory")]
     pub data_dir: Option<String>,
 
-    #[arg(long, short, env = DATA_DIR_KEY, help = "Override attempts directory")]
+    #[arg(long, short, env = TMP_DIR_KEY, help = "Override attempts directory")]
     pub tmp_dir: Option<String>,
 }
 
