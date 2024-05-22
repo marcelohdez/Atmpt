@@ -3,6 +3,7 @@ use std::{
     fs::{self, File},
     io::BufReader,
     path::PathBuf,
+    str::FromStr,
 };
 
 use anyhow::{bail, Context};
@@ -18,9 +19,10 @@ fn main() -> anyhow::Result<()> {
     let args = Atmpt::parse();
     let action = args.after_action();
 
-    let mut data_dir = Cow::Borrowed(dirs.data_dir());
-    if let Some(new_dir) = &args.data_dir {
-        data_dir = Cow::Owned(PathBuf::from(new_dir));
+    let tmp_dir = args.tmp_dir.map(|s| PathBuf::from_str(&s)).transpose()?;
+    let data_dir = match &args.data_dir {
+        Some(new_dir) => Cow::Owned(PathBuf::from_str(new_dir)?),
+        None => Cow::Borrowed(dirs.data_dir()),
     };
 
     if args.required.list_template_dir {
@@ -28,13 +30,13 @@ fn main() -> anyhow::Result<()> {
     } else if args.required.list_templates {
         println!("{}", Templates::try_from(data_dir.as_ref())?);
     } else if args.required.previous {
-        atmpt::summon_and_wait(&args.editor, &last_modified_attempt()?)?;
+        atmpt::summon_and_wait(&args.editor, &last_modified_attempt(&tmp_dir)?)?;
     } else {
         let template = match args.required.template {
             Some(t) => t,
             // assume retry option
             None => {
-                let file = File::open(get_session_path())
+                let file = File::open(get_session_path(&tmp_dir))
                     .context("Could not open session file, have you run atmpt recently?")?;
                 let session: Session = serde_json::from_reader(BufReader::new(file))
                     .context("Failed to read session file!")?;
@@ -43,19 +45,19 @@ fn main() -> anyhow::Result<()> {
             }
         };
 
-        atmpt::try_template(&template, &args.editor, &data_dir, action)?;
+        atmpt::try_template(&template, &args.editor, &data_dir, &tmp_dir, action)?;
     }
 
     Ok(())
 }
 
-fn last_modified_attempt() -> anyhow::Result<PathBuf> {
-    let atmpt_dir = get_atmpt_dir();
+fn last_modified_attempt(tmp_dir: &Option<PathBuf>) -> anyhow::Result<PathBuf> {
+    let atmpt_dir = get_atmpt_dir(tmp_dir);
     if !atmpt_dir.exists() {
         bail!("Could not find atmpt folder, have you run atmpt recently?");
     }
 
-    let entries = fs::read_dir(atmpt_dir)?;
+    let entries = fs::read_dir(atmpt_dir.as_ref())?;
     let mut last = None;
     for entry in entries {
         let entry = entry?;

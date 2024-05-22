@@ -4,6 +4,7 @@ pub const EDITOR_KEY: &str = "VISUAL";
 pub const ALWAYS_DELETE_KEY: &str = "ATMPT_ALWAYS_DELETE";
 pub const ALWAYS_KEEP_KEY: &str = "ATMPT_ALWAYS_KEEP";
 pub const DATA_DIR_KEY: &str = "ATMPT_DATA_DIR";
+pub const TMP_DIR_KEY: &str = "ATMPT_TMP_DIR";
 
 #[derive(Debug, Parser)]
 #[command(author, version, about)]
@@ -33,8 +34,11 @@ pub struct Atmpt {
     )]
     pub keep: bool,
 
-    #[arg(long, hide_env = true, env = DATA_DIR_KEY, help = "Override data directory")]
+    #[arg(long, hide_env = true, env = DATA_DIR_KEY, help = "Override templates directory")]
     pub data_dir: Option<String>,
+
+    #[arg(long, short, env = DATA_DIR_KEY, help = "Override attempts directory")]
+    pub tmp_dir: Option<String>,
 }
 
 #[derive(Debug, Parser)]

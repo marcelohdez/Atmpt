@@ -7,6 +7,7 @@ use session::Session;
 pub use templates::*;
 
 use std::{
+    borrow::Cow,
     env,
     fs::{self, File},
     io::{self, BufWriter},
@@ -17,26 +18,30 @@ use std::{
 use anyhow::{bail, Context, Ok};
 use chrono::Local;
 
-pub fn get_atmpt_dir() -> PathBuf {
-    env::temp_dir().join("atmpt")
+pub fn get_atmpt_dir(tmp_dir: &Option<PathBuf>) -> Cow<PathBuf> {
+    match tmp_dir {
+        Some(d) => Cow::Borrowed(d),
+        None => Cow::Owned(env::temp_dir().join("atmpt")),
+    }
 }
 
-pub fn get_session_path() -> PathBuf {
-    get_atmpt_dir().join("session.json")
+pub fn get_session_path(tmp_dir: &Option<PathBuf>) -> PathBuf {
+    get_atmpt_dir(tmp_dir).join("session.json")
 }
 
 pub fn try_template(
     template: &str,
     editor: &str,
     data_dir: &Path,
+    tmp_dir: &Option<PathBuf>,
     action: Option<AfterAction>,
 ) -> anyhow::Result<()> {
     let templates = Templates::try_from(data_dir)?;
     let wanted_dir = templates.find(template)?;
-    let tmp_dir = get_atmpt_dir();
+    let projects_dir = get_atmpt_dir(tmp_dir);
 
     let time = Local::now().format("%Y_%m_%d-%H_%M_%S");
-    let project_dir = tmp_dir.join(format!("{template}_{time}"));
+    let project_dir = projects_dir.join(format!("{template}_{time}"));
 
     copy_dir_recursively(wanted_dir, &project_dir)?;
     if let Err(e) = summon_and_wait(editor, &project_dir) {
@@ -45,7 +50,7 @@ pub fn try_template(
     }
 
     // save session data to file
-    let file = File::create(get_session_path())?;
+    let file = File::create(get_session_path(tmp_dir))?;
     let session = Session {
         last_template: template.to_owned(),
     };
