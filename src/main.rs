@@ -12,7 +12,7 @@ use clap::Parser;
 use directories::ProjectDirs;
 
 fn main() -> anyhow::Result<()> {
-    let Some(dirs) = ProjectDirs::from("me", "marcelohdez", "Atmpt") else {
+    let Some(dirs) = ProjectDirs::from("me", "marcelohdez", atmpt::PROGRAM_NAME) else {
         bail!("Could not generate any directories for this OS!");
     };
 

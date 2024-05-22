@@ -18,15 +18,18 @@ use std::{
 use anyhow::{bail, Context, Ok};
 use chrono::Local;
 
+pub const PROGRAM_NAME: &str = "atmpt";
+const SESSION_FILE_NAME: &str = ".atmpt.json";
+
 pub fn get_atmpt_dir(tmp_dir: &Option<PathBuf>) -> Cow<PathBuf> {
     match tmp_dir {
         Some(d) => Cow::Borrowed(d),
-        None => Cow::Owned(env::temp_dir().join("atmpt")),
+        None => Cow::Owned(env::temp_dir().join(PROGRAM_NAME)),
     }
 }
 
 pub fn get_session_path(tmp_dir: &Option<PathBuf>) -> PathBuf {
-    get_atmpt_dir(tmp_dir).join("session.json")
+    get_atmpt_dir(tmp_dir).join(SESSION_FILE_NAME)
 }
 
 pub fn try_template(
