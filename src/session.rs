@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Session {
     pub last_template: String,
-    pub previous_attempt: PathBuf,
+    pub previous_attempt: Option<PathBuf>,
 }
 
 impl Session {

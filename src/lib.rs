@@ -52,11 +52,14 @@ pub fn try_template(
         bail!(e);
     }
 
-    if should_keep(action)? {
+    // wrap project dir in Option<PathBuf> to save to session file
+    let project_dir = if should_keep(action)? {
         println!("Saved as {project_dir:?}.");
+        Some(project_dir)
     } else {
         remove_attempt(&project_dir)?;
-    }
+        None
+    };
 
     // save session data to file
     let file = File::create(get_session_path(tmp_dir))?;

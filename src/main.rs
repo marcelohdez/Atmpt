@@ -24,15 +24,19 @@ fn main() -> anyhow::Result<()> {
     } else if args.required.list_templates {
         println!("{}", Templates::try_from(data_dir.as_ref())?);
     } else if args.required.previous {
-        let session = Session::from_file(&get_session_path(&tmp_dir))?;
-        if !session.previous_attempt.exists() {
-            bail!(
-                "Last modified attempt, {:?} does not exist! Did it move?\nMake a new attempt!",
-                session.previous_attempt
-            );
-        }
+        match Session::from_file(&get_session_path(&tmp_dir))?.previous_attempt {
+            Some(path) => {
+                if !path.exists() {
+                    bail!(
+                        "Last saved attempt, {:?} does not exist! Did it move?",
+                        path
+                    );
+                }
 
-        atmpt::summon_and_wait(&args.editor, &session.previous_attempt)?;
+                atmpt::summon_and_wait(&args.editor, &path)?;
+            }
+            None => bail!("No previous attempt found in session file!"),
+        }
     } else {
         let template = match args.required.template {
             Some(t) => t,
