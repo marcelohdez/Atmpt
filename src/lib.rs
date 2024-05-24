@@ -52,18 +52,19 @@ pub fn try_template(
         bail!(e);
     }
 
-    // save session data to file
-    let file = File::create(get_session_path(tmp_dir))?;
-    let session = Session {
-        last_template: template.to_owned(),
-    };
-    serde_json::to_writer(BufWriter::new(file), &session)?;
-
     if should_keep(action)? {
         println!("Saved as {project_dir:?}.");
     } else {
         remove_attempt(&project_dir)?;
     }
+
+    // save session data to file
+    let file = File::create(get_session_path(tmp_dir))?;
+    let session = Session {
+        last_template: template.to_owned(),
+        previous_attempt: project_dir,
+    };
+    serde_json::to_writer(BufWriter::new(file), &session)?;
 
     Ok(())
 }

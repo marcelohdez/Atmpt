@@ -1,13 +1,7 @@
-use std::{
-    borrow::Cow,
-    fs::{self, File},
-    io::BufReader,
-    path::PathBuf,
-    str::FromStr,
-};
+use std::{borrow::Cow, fs::File, io::BufReader, path::PathBuf, str::FromStr};
 
 use anyhow::{bail, Context};
-use atmpt::{get_atmpt_dir, get_session_path, session::Session, templates::Templates, Atmpt};
+use atmpt::{get_session_path, session::Session, templates::Templates, Atmpt};
 use clap::Parser;
 use directories::ProjectDirs;
 
@@ -30,7 +24,15 @@ fn main() -> anyhow::Result<()> {
     } else if args.required.list_templates {
         println!("{}", Templates::try_from(data_dir.as_ref())?);
     } else if args.required.previous {
-        atmpt::summon_and_wait(&args.editor, &last_modified_attempt(&tmp_dir)?)?;
+        let session = Session::from_file(&get_session_path(&tmp_dir))?;
+        if !session.previous_attempt.exists() {
+            bail!(
+                "Last modified attempt, {:?} does not exist! Did it move?\nMake a new attempt!",
+                session.previous_attempt
+            );
+        }
+
+        atmpt::summon_and_wait(&args.editor, &session.previous_attempt)?;
     } else {
         let template = match args.required.template {
             Some(t) => t,
@@ -49,37 +51,4 @@ fn main() -> anyhow::Result<()> {
     }
 
     Ok(())
-}
-
-fn last_modified_attempt(tmp_dir: &Option<PathBuf>) -> anyhow::Result<PathBuf> {
-    let atmpt_dir = get_atmpt_dir(tmp_dir);
-    if !atmpt_dir.exists() {
-        bail!("Could not find atmpt folder, have you run atmpt recently?");
-    }
-
-    let entries = fs::read_dir(atmpt_dir.as_ref())?;
-    let mut last = None;
-    for entry in entries {
-        let entry = entry?;
-
-        let metadata = entry.metadata()?;
-        if !metadata.is_dir() {
-            continue;
-        }
-
-        let new_time = metadata.modified()?;
-        if let Some((_, time)) = last {
-            if new_time <= time {
-                continue;
-            }
-        }
-
-        last = Some((entry.path(), new_time));
-    }
-
-    if let Some((path, _)) = last {
-        Ok(path)
-    } else {
-        bail!("Could not find last modified attempt, have you saved any?")
-    }
 }

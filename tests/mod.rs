@@ -94,6 +94,6 @@ fn pass_on_retry() {
 fn pass_on_previous() {
     const DIR: &str = "previous";
 
-    cmd_opts(DIR, ["c", "-y"], false, false).success(); // keep directory with attempt
+    cmd_opts(DIR, ["c", "-y"], false, true).success(); // keep directory with attempt
     cmd_always_delete(DIR, ["-p"]).success();
 }
