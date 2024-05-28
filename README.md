@@ -107,10 +107,10 @@ atmpt is licensed under the GPLv3, a free and open source license. For more
 information, please read the [LICENSE] file in this repositories' root
 directory.
 
-[installing]: https://github.com/marcelohdez/atmpt/#installing
-[data directory]: https://github.com/marcelohdez/atmpt/#data-directory
+[installing]: #installing
+[data directory]: #data-directory
 [Rust]: https://www.rust-lang.org
 [temporary directory]: https://en.wikipedia.org/wiki/Temporary_folder
 [crates.io]: https://crates.io/crates/atmpt
-[templates]: https://github.com/marcelohdez/atmpt/#templates
+[templates]: #templates
 [LICENSE]: https://github.com/marcelohdez/atmpt/blob/master/LICENSE
