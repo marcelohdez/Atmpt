@@ -1,6 +1,6 @@
 # atmpt
 
-Pronounced _attempt_, Atmpt is a simple CLI program which lets you quickly
+Pronounced _attempt_, atmpt is a simple CLI program which lets you quickly
 create a temporary project and open it in your chosen `$VISUAL` environment
 variable.
 
@@ -22,75 +22,95 @@ atmpt <TEMPLATE>
 ```
 
 where `<TEMPLATE>` is the name of the folder in atmpt's [data directory] which
-you would like to clone. For example, if you have a `cpp` template for C++, you
-would run
+you would like to clone and open with the binary set as your `$VISUAL`
+environment variable.
+
+After your editor exits you will be asked if you would like to keep or delete
+the attempt (by default they are stored in your system's [temporary directory],
+which should get deleted in time if the folder is not moved manually). If you
+decide to keep it, you can reopen the attempt with `--previous`:
 
 ```bash
-atmpt cpp
+atmpt -p
 ```
 
-Afterwards, whatever you have set as your `$VISUAL`
-environment variable will be run in the new directory.
+Whether the attempt was saved or not, you can start a new attempt with the same
+template with `--retry`:
+
+```bash
+atmpt -r
+```
+
+To view all options please see the help page:
+
+```bash
+atmpt --help
+```
 
 ## Installing
 
-**Ensure you have [Rust] installed.**
+> [!IMPORTANT]
+>
+> - Ensure you have [Rust] installed.
+> - Unless you bring your own templates, atmpt is useless without also
+>   installing the default ones. See the [templates] section.
 
-You can install from `crates.io` using `cargo`:
+atmpt is available on [crates.io]:
 
 ```bash
 cargo install atmpt
 ```
 
-_Or_ you can build manually; After cloning this repo, `cd` into it and install by
-running:
+_Or_ you can build manually; After cloning this repo, `cd` into it and if you
+would like cargo to install into its default directory run:
 
 ```bash
 cargo install --path .
 ```
 
+Otherwise, to place in your `$PATH` yourself, you can build with:
+
+```bash
+cargo build -r
+```
+
+With the resulting binary being `./target/release/atmpt` (or `atmpt.exe` on
+Windows).
+
 ### Templates
 
-Both of the methods above should place `atmpt` in `$HOME/.cargo/bin`, but you
-will not have any templates. You may either create them in the [data directory],
-or you could use the default ones included in this repo _(example given for
-Unix-like systems e.g. Linux or MacOS)_:
+atmpt uses any folders in your [data directory] as templates to clone. You may
+install the default ones (under `/templates`) by running the following commands
+after cloning and `cd`ing into this repo _(example given for MacOS/Linux)_:
 
 ```bash
 mkdir -p $(atmpt -d)
 cp -r templates/* $(atmpt -d)
 ```
 
-Additionally, _autocompletion files_ for several shells are created in cargo's
-`$OUTDIR` directory, which should have been printed out by cargo during
-compilation, something like: `./target/release/build/atmpt-<hash>/out/`. These
-should be placed in your respective shell's autocompletion directory, for
-example, `zsh` reads completion files from any directory in your `$fpath`
-environment variable.
-
 ## Data Directory
 
-Many times above you may have seen talk about a _data directory_, this is
-where your templates should be stored, but is dependent on the OS. Therefore,
-Atmpt offers an option to print it out on your system (you may have seen its
-output be used in the [installing] section):
+This is where your templates will be stored but is different depending on the
+system. atmpt offers the `--list-template-dir` option to print it out on your
+system (you may have used it while setting up your [templates]):
 
 ```bash
-atmpt --list-template-dir
+atmpt -d
 ```
-
-_(This option can be shortened to `-d`, as seen in examples)_
 
 In the printed directory you may put folders for atmpt to clone as temporary
 projects when run with their name as input.
 
 ## License
 
-Atmpt is licensed under the GPLv3, a free and open source license. For more
+atmpt is licensed under the GPLv3, a free and open source license. For more
 information, please read the [LICENSE] file in this repositories' root
 directory.
 
-[installing]: https://github.com/marcelohdez/Atmpt/#installing
-[data directory]: https://github.com/marcelohdez/Atmpt/#data-directory
+[installing]: https://github.com/marcelohdez/atmpt/#installing
+[data directory]: https://github.com/marcelohdez/atmpt/#data-directory
 [Rust]: https://www.rust-lang.org
-[LICENSE]: https://github.com/marcelohdez/Atmpt/blob/master/LICENSE
+[temporary directory]: https://en.wikipedia.org/wiki/Temporary_folder
+[crates.io]: https://crates.io/crates/atmpt
+[templates]: https://github.com/marcelohdez/atmpt/#templates
+[LICENSE]: https://github.com/marcelohdez/atmpt/blob/master/LICENSE
